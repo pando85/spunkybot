@@ -2980,7 +2980,7 @@ class Game(object):
 HOME = os.path.dirname(os.path.realpath(__file__))
 home_path = HOME
 
-if len(sys.argv) == 1: 
+if len(sys.argv) != 0: 
     if os.path.exists(home_path):
         home_path = sys.argv[1]
 
