@@ -2978,11 +2978,11 @@ class Game(object):
 ### Main ###
 # get full path of spunky.py
 HOME = os.path.dirname(os.path.realpath(__file__))
+home_path = HOME
 
 if len(sys.argv) == 1: 
-    home_path = sys.argv[1]
-    if not os.path.exists(home_path):
-        home_path = HOME
+    if os.path.exists(home_path):
+        home_path = sys.argv[1]
 
 # load the GEO database and store it globally in interpreter memory
 GEOIP = pygeoip.Database(os.path.join(HOME, 'lib', 'GeoIP.dat'))
