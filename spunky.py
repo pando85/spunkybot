@@ -28,6 +28,7 @@ __version__ = '1.4.0'
 ### IMPORTS
 import os
 import re
+import sys
 import time
 import sqlite3
 import math
