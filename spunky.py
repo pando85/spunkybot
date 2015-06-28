@@ -1756,7 +1756,7 @@ class LogParser(object):
                                 self.game.rcon_say("^2%s ^1banned permanently ^7by %s: ^4%s" % (victim.get_name(), self.game.players[sar['player_num']].get_name(), reason))
                                 self.game.kick_player(victim.get_player_num())
                                 # add IP address to bot-banlist.txt
-                                with open(os.path.join(HOME, 'bot-banlist.txt'), 'a') as banlist:
+                                with open(os.path.join(home_path, 'bot-banlist.txt'), 'a') as banlist:
                                     banlist.write("%s:-1   // %s    banned on  %s, reason : %s\n" % (victim.get_ip_address(), victim.get_name(), time.strftime("%d/%m/%Y (%H:%M)", time.localtime(time.time())), reason))
                     else:
                         self.game.rcon_tell(sar['player_num'], "^7You need to enter a reason: ^3!permban <name> <reason>")
@@ -2762,7 +2762,7 @@ class Game(object):
         logger.info("Opening RCON socket   : OK")
         if game_cfg.getboolean('rules', 'show_rules'):
             # create instance of Rules to display the rules and rotation messages
-            Rules(os.path.join(HOME, 'conf', 'rules.conf'), game_cfg.getint('rules', 'rules_frequency'), self.rcon_handle)
+            Rules(os.path.join(home_path, 'conf', 'rules.conf'), game_cfg.getint('rules', 'rules_frequency'), self.rcon_handle)
             logger.info("Load rotating messages: OK")
 
         # dynamic mapcycle
@@ -2978,11 +2978,16 @@ class Game(object):
 # get full path of spunky.py
 HOME = os.path.dirname(os.path.realpath(__file__))
 
+if len(sys.argv) == 1: 
+    home_path = sys.argv[1]
+    if not os.path.exists(home_path):
+        home_path = HOME
+
 # load the GEO database and store it globally in interpreter memory
 GEOIP = pygeoip.Database(os.path.join(HOME, 'lib', 'GeoIP.dat'))
 
 # connect to database
-conn = sqlite3.connect(os.path.join(HOME, 'data.sqlite'))
+conn = sqlite3.connect(os.path.join(home_path, 'data.sqlite'))
 curs = conn.cursor()
 
 # create tables if not exists
@@ -2992,7 +2997,7 @@ curs.execute('CREATE TABLE IF NOT EXISTS ban_list (id INTEGER PRIMARY KEY NOT NU
 curs.execute('CREATE TABLE IF NOT EXISTS ban_points (id INTEGER PRIMARY KEY NOT NULL, guid TEXT NOT NULL, point_type TEXT, expires DATETIME)')
 
 # create instance of LogParser
-LogParser(os.path.join(HOME, 'conf', 'settings.conf'))
+LogParser(os.path.join(home_path, 'conf', 'settings.conf'))
 
 # close database connection
 conn.close()
